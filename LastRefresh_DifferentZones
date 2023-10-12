@@ -1,0 +1,55 @@
+let
+// Define the start of summer and winter time in Europe and the US
+
+SummerTimeEU = Date.StartOfWeek( #date(Date.Year( DateTime.LocalNow() ), 3, 31), Day.Sunday ), // Last Sunday in March
+SummerTimeUS = Date.StartOfWeek( #date(Date.Year( DateTime.LocalNow() ), 3, 14), Day.Sunday ), // Second Sunday in March
+WinterTimeEU = Date.StartOfWeek( #date(Date.Year( DateTime.LocalNow() ), 10, 31), Day.Sunday ), // Last Sunday in October
+WinterTimeUS = Date.StartOfWeek( #date(Date.Year( DateTime.LocalNow() ), 11, 7), Day.Sunday ), // First Sunday in November
+
+// Gets current date and time
+CurrentDateTime = DateTimeZone.RemoveZone(DateTimeZone.UtcNow()),
+
+// Shift of time depending on summer and winter time in EU
+TimeShiftFromUTC_EU = if CurrentDateTime < SummerTimeEU & #time(1, 0, 0) or
+CurrentDateTime > WinterTimeEU & #time(1, 0, 0) then
+1 else 2, // UTC Zone 2 for summer time, UTC Zone 1 for winter time
+
+// Shift of time depending on summer and winter time in East coast USA
+TimeShiftFromUTC_US = if CurrentDateTime < SummerTimeUS & #time(1, 0, 0) or
+CurrentDateTime > WinterTimeUS & #time(1, 0, 0) then
+-5 else -4, // UTC Zone -4 for summer time, UTC Zone -5 for winter time
+
+// Czech Republic and Hungary is using Dayligt Saving Time - Same UTC as Copenhagen
+// Applying TimeShiftFromUTC_EU to change depending on summer and winter time
+TimeStampEU = DateTimeZone.SwitchZone( DateTimeZone.UtcNow(), TimeShiftFromUTC_EU, 0),
+
+// US Timeshift fit to US dates
+// Applying TimeShiftFromUTC_US to change depending on summer and winter time
+TimeStampUS = DateTimeZone.SwitchZone( DateTimeZone.UtcNow(), TimeShiftFromUTC_US, 0),
+
+// China is NOT using Daylight Saving Time - Stopped from 1991
+TimeStampChina = DateTimeZone.SwitchZone( DateTimeZone.UtcNow(), +8, 0),
+
+// Vietnam is NOT using Dayligt Saving Time
+TimeStampVietnam = DateTimeZone.SwitchZone( DateTimeZone.UtcNow(), +7, 0),
+
+// Mexico is NOT using Daylight Saving Time - Stopped from 2022
+TimeStampMexico = DateTimeZone.SwitchZone( DateTimeZone.UtcNow(), -6, 0),
+
+// Add a column to the table for each time zone and change format to datetimezone.
+#"Added Washington DC (DST)" = #table(1, {{TimeStampUS}}),
+#"Renamed Column1" = Table.RenameColumns(#"Added Washington DC (DST)",{{"Column1", "Washington DC (DST)"}}),
+#"Added Copenhagen (DST)" = Table.AddColumn(#"Renamed Column1", "Copenhagen (DST)", each TimeStampEU as datetimezone),
+#"Added Mexico (UTC -6)" = Table.AddColumn(#"Added Copenhagen (DST)", "Monterrey (UTC -6)", each TimeStampMexico as datetimezone),
+#"Added China (UTC+8)" = Table.AddColumn(#"Added Mexico (UTC -6)", "China (UTC +8)", each TimeStampChina as datetimezone),
+#"Added Vietnam (UTC +7)" = Table.AddColumn(#"Added China (UTC+8)", "Vietnam (UTC +7)", each TimeStampVietnam as datetimezone),
+#"Added Server Host Time" = Table.AddColumn(#"Added Vietnam (UTC +7)", "Server Host Time", each DateTime.LocalNow() as datetime),
+#"Changed Type Date/Time/TimeZone" = Table.TransformColumnTypes(#"Added Server Host Time",{
+{"Washington DC (DST)", type datetimezone}, 
+{"Copenhagen (DST)", type datetimezone}, 
+{"Monterrey (UTC -6)", type datetimezone}, 
+{"China (UTC +8)", type datetimezone}, 
+{"Vietnam (UTC +7)", type datetimezone}, 
+{"Server Host Time", type datetime}})
+in
+#"Changed Type Date/Time/TimeZone"
