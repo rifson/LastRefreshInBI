@@ -16,6 +16,9 @@ All regions can be shown as a tooltip in Power BI thus all users are able to see
 
 ![image](https://github.com/rifson/LastRefreshInBI/assets/10552516/88cff642-b76c-412b-91cc-4f4cc1bb8d14)
 
+All code explained can be seen in this YouTube Video:<br />
+https://www.youtube.com/watch?v=xOj7KNqe_cI&ab_channel=HowtoPowerBI
+
 # How to add
 In order to add this table to Power BI simply just add a blank query to Power BI and paste in LastRefreshInBI code:
 
