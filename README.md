@@ -42,5 +42,7 @@ I have used 14 Mar 2001 13.30 (d mmm yyyy hh.nn)
 
 Now its ready to use and will change each time the Power BI report is set to do a scheduled refresh or is being refreshed manually
 
+# Creating Tooltip
 
-
+To create Tool Tip in Power BI as shown in the first picture please follow this 5 min guide<br />
+https://youtu.be/npaQ42K1sTs?si=1sufX5h22NJAXtzW&t=9
