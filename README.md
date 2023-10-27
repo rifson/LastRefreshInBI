@@ -19,7 +19,7 @@ All regions can be shown as a tooltip in Power BI thus all users are able to see
 All code explained can be seen in this YouTube Video:<br />
 https://www.youtube.com/watch?v=xOj7KNqe_cI&ab_channel=HowtoPowerBI
 
-# How to add
+## How to add
 In order to add this table to Power BI simply just add a blank query to Power BI and paste in LastRefreshInBI code:
 
 Get data and then Blank query
@@ -45,7 +45,7 @@ I have used 14 Mar 2001 13.30 (d mmm yyyy hh.nn)
 
 Now its ready to use and will change each time the Power BI report is set to do a scheduled refresh or is being refreshed manually
 
-# Creating Tooltip
+## Creating Tooltip
 
 To create Tool Tip in Power BI as shown in the first picture please follow this 5 min guide<br />
 https://youtu.be/npaQ42K1sTs?si=1sufX5h22NJAXtzW&t=9
